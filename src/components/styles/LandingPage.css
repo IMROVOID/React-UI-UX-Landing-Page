@@ -2,24 +2,33 @@
   display: flex;
   flex-direction: column;
   height: 100vh;
-  position: relative; /* Needed for z-index context */
+  position: relative;
+  overflow: hidden; /* Important to contain the background */
+}
+
+.grid-background {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 0; /* Position behind everything else */
 }
 
 .content-container {
   display: flex;
   flex: 1;
   align-items: center;
-  justify-content: flex-start; /* Align content to the left */
-  padding: 2rem;
+  padding: 0 5rem;
   width: 100%;
+  gap: 2rem;
+  position: relative; /* Ensure this is in a new stacking context */
+  z-index: 1; /* Position above the background */
 }
 
 .hero-section {
   flex: 1;
-  padding-left: 5rem; /* Added padding */
-  padding-right: 2rem;
-  z-index: 1;
-  max-width: 50%; /* Constrain hero text width */
+  max-width: 50%;
 }
 
 .hero-title {
@@ -35,10 +44,38 @@
 }
 
 .canvas-container {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
+  flex: 1;
   height: 100%;
-  z-index: 0; /* Position canvas behind content */
+  position: relative;
+}
+
+.hero-buttons {
+  margin-top: 2rem;
+  display: flex;
+  gap: 1rem;
+  align-items: center; /* Align buttons vertically */
+}
+
+.hero-button {
+  font-family: 'Poppins', sans-serif;
+  cursor: pointer;
+  border: none;
+  background: none;
+  color: white;
+  font-size: 1rem;
+  padding: 0.75rem 1.5rem;
+  position: relative;
+  text-decoration: none;
+  transition: all 0.3s ease;
+}
+
+/* Secondary Button (Simple Outline) */
+.hero-button--secondary {
+  border: 1px solid white;
+  border-radius: 8px;
+}
+
+.hero-button--secondary:hover {
+  background-color: white;
+  color: black;
 }

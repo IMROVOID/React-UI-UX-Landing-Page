@@ -1,0 +1,64 @@
+/* Keyframe for the smooth rotation of the gradient */
+@keyframes rotateGradient {
+  100% {
+    transform: rotate(1turn);
+  }
+}
+
+.animated-border-button {
+  position: relative;
+  border-radius: 8px;
+  overflow: hidden; /* Crucial for the effect */
+  padding: 2px; /* Thinner border */
+  -webkit-backface-visibility: hidden;
+  -moz-backface-visibility: hidden;
+  -webkit-transform: translate3d(0, 0, 0);
+  -moz-transform: translate3d(0, 0, 0);
+}
+
+.animated-border-button::before {
+  content: '';
+  position: absolute;
+  top: -50%;
+  left: -50%;
+  width: 200%;
+  height: 200%;
+  z-index: 1; /* Sits behind the content */
+  
+  /* 
+    Updated gradient to make the colored segment longer (approx. 80%).
+  */
+  background-image: conic-gradient(
+    from 180deg,
+    transparent 15%,
+    #ff0080,
+    blue,
+    #55f7b9,
+    #f7b955,
+    #ff0080,
+    transparent 95%
+  );
+  
+  animation: rotateGradient 4s linear infinite;
+  
+  /* The blur softens the start and end of the comet */
+  filter: blur(15px);
+}
+
+.button-content {
+  display: block;
+  position: relative;
+  z-index: 2; /* Sits on top of the glowing pseudo-element */
+  
+  /* The "liquid glass" effect */
+  background: rgba(10, 10, 10, 0.6); /* Dark, semi-transparent background */
+  backdrop-filter: blur(10px); /* Blurs the content behind it (our glow) */
+  -webkit-backdrop-filter: blur(10px);
+  
+  padding: 0.75rem 1.5rem;
+  border-radius: 6px; /* (Container radius - padding) */
+  
+  color: white;
+  font-size: 1rem;
+  font-family: 'Poppins', sans-serif;
+}

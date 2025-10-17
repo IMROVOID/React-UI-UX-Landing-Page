@@ -54,20 +54,18 @@ function Cursor(props: React.ComponentProps<'mesh'>) {
   );
 }
 
-const ThreeScene = () => (
+const CursorScene = () => (
   <>
     <Leva hidden />
     <Canvas orthographic dpr={[1, 2]} camera={{ position: [0, 0, 10], zoom: 200 }}>
-      {/* Restoring original group rotation for the correct perspective */}
       <group rotation={[Math.PI / 5, -Math.PI / 5, Math.PI / 2]}>
         <Bounds fit clip observe margin={1.25}>
           <Cursor scale={[0.5, 1, 0.5]} />
         </Bounds>
-        {/* Resized grid and placed inside the group to match the cursor's angle */}
-        <gridHelper args={[10, 40, '#2a2a2a', '#101010']} position={[-0.25, 0, 0]} rotation={[0, 0, Math.PI / 2]} />
+        {/* The gridHelper has been removed from this component */}
       </group>
     </Canvas>
   </>
 );
 
-export default ThreeScene;
+export default CursorScene;

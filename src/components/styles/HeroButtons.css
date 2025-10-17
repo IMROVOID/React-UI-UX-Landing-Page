@@ -1,0 +1,84 @@
+.hero-buttons-container {
+  display: flex;
+  gap: 1.5rem;
+  margin-top: 2.5rem;
+}
+
+.hero-button {
+  padding: 0.75rem 2rem;
+  font-size: 1rem;
+  font-weight: 600;
+  font-family: 'Poppins', sans-serif;
+  cursor: pointer;
+  background-color: transparent;
+  border-radius: 8px;
+  transition: all 0.3s ease;
+}
+
+/* Simple white outline button */
+.hero-button.outline {
+  border: 2px solid white;
+  color: white;
+}
+
+.hero-button.outline:hover {
+  background-color: white;
+  color: black;
+}
+
+/* Animated gradient outline button */
+.hero-button.gradient {
+  position: relative;
+  border: 2px solid transparent;
+  color: white;
+  background-clip: padding-box; /* Ensures border is not covered by pseudo-element */
+  z-index: 1;
+}
+
+.hero-button.gradient::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: -1;
+  margin: -2px; /* Must match the border width */
+  border-radius: inherit; /* Match the button's border-radius */
+  background: linear-gradient(90deg, #ff0080, #f7b955, #4c00ff, #ff0080);
+  background-size: 400% 400%;
+  animation: gradient-animation 6s linear infinite;
+}
+
+.hero-button.gradient::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: -2;
+  margin: -2px;
+  border-radius: inherit;
+  background: linear-gradient(90deg, #ff0080, #f7b955, #4c00ff, #ff0080);
+  background-size: 400% 400%;
+  filter: blur(15px);
+  opacity: 0.8;
+  animation: gradient-animation 6s linear infinite;
+}
+
+@keyframes gradient-animation {
+  0% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0% 50%;
+  }
+}
+
+.hero-button.gradient:hover {
+  color: #cccccc;
+}
