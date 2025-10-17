@@ -5,6 +5,7 @@ import { LayerMaterial, Depth, Fresnel } from 'lamina';
 import { LayerMaterial as LayerMaterialImpl } from 'lamina/vanilla';
 import { Leva } from 'leva';
 import * as THREE from 'three';
+import { useMediaQuery } from '../hooks/useMediaQuery';
 import cursorUrl from '../assets/cursor.glb';
 
 interface GLTFResult {
@@ -25,7 +26,7 @@ interface MaterialWithLayers {
 function Cursor(props: React.ComponentProps<'mesh'>) {
   const ref = useRef<LayerMaterialImpl>(null);
   const { nodes } = useGLTF(cursorUrl) as unknown as GLTFResult;
-  const gradient = 0.7; // Hardcoded value since leva is hidden
+  const gradient = 0.7;
 
   useFrame((state) => {
     if (ref.current) {
@@ -54,18 +55,26 @@ function Cursor(props: React.ComponentProps<'mesh'>) {
   );
 }
 
-const CursorScene = () => (
-  <>
-    <Leva hidden />
-    <Canvas orthographic dpr={[1, 2]} camera={{ position: [0, 0, 10], zoom: 200 }}>
-      <group rotation={[Math.PI / 5, -Math.PI / 5, Math.PI / 2]}>
-        <Bounds fit clip observe margin={1.25}>
-          <Cursor scale={[0.5, 1, 0.5]} />
-        </Bounds>
-        {/* The gridHelper has been removed from this component */}
-      </group>
-    </Canvas>
-  </>
-);
+const CursorScene = () => {
+  const isMobile = useMediaQuery('(max-width: 768px)');
+  
+  // If on mobile, render nothing to hide the cursor.
+  if (isMobile) {
+    return null;
+  }
+  
+  return (
+    <>
+      <Leva hidden />
+      <Canvas orthographic dpr={[1, 2]} camera={{ position: [0, 0, 10], zoom: 200 }}>
+        <group rotation={[Math.PI / 5, -Math.PI / 5, Math.PI / 2]}>
+          <Bounds fit clip observe margin={1.25}>
+            <Cursor scale={isMobile ? [0.4, 0.8, 0.4] : [0.5, 1, 0.5]} />
+          </Bounds>
+        </group>
+      </Canvas>
+    </>
+  );
+};
 
 export default CursorScene;

@@ -25,3 +25,15 @@ a {
   color: white;
   text-decoration: none;
 }
+
+/* --- Custom Solid Color Text Selection --- */
+::selection {
+  /* A solid color from the 3D cursor's palette */
+  background-color: #ff0080;
+  color: white; /* Ensure text is readable */
+}
+
+::-moz-selection {
+  background-color: #ff0080;
+  color: white;
+}
