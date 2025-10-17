@@ -1,23 +1,42 @@
-import { useRef } from 'react';
+import React, { useRef } from 'react';
 import { Canvas, useFrame } from '@react-three/fiber';
 import { useGLTF, Bounds, Edges } from '@react-three/drei';
 import { LayerMaterial, Depth, Fresnel } from 'lamina';
-import { useControls } from 'leva';
+import { LayerMaterial as LayerMaterialImpl } from 'lamina/vanilla';
+import { Leva } from 'leva';
+import * as THREE from 'three';
 import cursorUrl from '../assets/cursor.glb';
 
-function Cursor(props: any) {
-  const ref = useRef<any>();
-  const { nodes } = useGLTF(cursorUrl) as any;
-  const { gradient } = useControls({ gradient: { value: 0.7, min: 0, max: 1 } });
+interface GLTFResult {
+  nodes: {
+    Cube: THREE.Mesh;
+  };
+  materials: {
+    [name: string]: THREE.Material;
+  };
+}
+
+interface MaterialWithLayers {
+  layers: {
+    origin: THREE.Vector3;
+  }[];
+}
+
+function Cursor(props: React.ComponentProps<'mesh'>) {
+  const ref = useRef<LayerMaterialImpl>(null);
+  const { nodes } = useGLTF(cursorUrl) as unknown as GLTFResult;
+  const gradient = 0.7; // Hardcoded value since leva is hidden
 
   useFrame((state) => {
     if (ref.current) {
+      const material = ref.current as unknown as MaterialWithLayers;
       const sin = Math.sin(state.clock.elapsedTime / 2);
       const cos = Math.cos(state.clock.elapsedTime / 2);
-      ref.current.layers[0].origin.set(cos / 2, 0, 0);
-      ref.current.layers[1].origin.set(cos, sin, cos);
-      ref.current.layers[2].origin.set(sin, cos, sin);
-      ref.current.layers[3].origin.set(cos, sin, cos);
+      
+      material.layers[0].origin.set(cos / 2, 0, 0);
+      material.layers[1].origin.set(cos, sin, cos);
+      material.layers[2].origin.set(sin, cos, sin);
+      material.layers[3].origin.set(cos, sin, cos);
     }
   });
 
@@ -36,14 +55,19 @@ function Cursor(props: any) {
 }
 
 const ThreeScene = () => (
-  <Canvas orthographic dpr={[1, 2]} camera={{ position: [0, 0, 10], zoom: 200 }}>
-    <group rotation={[Math.PI / 5, -Math.PI / 5, Math.PI / 2]}>
-      <Bounds fit clip observe margin={1.25}>
-        <Cursor scale={[0.5, 1, 0.5]} />
-      </Bounds>
-      <gridHelper args={[10, 40, '#101010', '#050505']} position={[-0.25, 0, 0]} rotation={[0, 0, Math.PI / 2]} />
-    </group>
-  </Canvas>
+  <>
+    <Leva hidden />
+    <Canvas orthographic dpr={[1, 2]} camera={{ position: [0, 0, 10], zoom: 200 }}>
+      {/* Restoring original group rotation for the correct perspective */}
+      <group rotation={[Math.PI / 5, -Math.PI / 5, Math.PI / 2]}>
+        <Bounds fit clip observe margin={1.25}>
+          <Cursor scale={[0.5, 1, 0.5]} />
+        </Bounds>
+        {/* Resized grid and placed inside the group to match the cursor's angle */}
+        <gridHelper args={[10, 40, '#2a2a2a', '#101010']} position={[-0.25, 0, 0]} rotation={[0, 0, Math.PI / 2]} />
+      </group>
+    </Canvas>
+  </>
 );
 
 export default ThreeScene;
